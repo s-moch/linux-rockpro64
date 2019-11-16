@@ -1126,6 +1126,7 @@ static u32 rk3x_i2c_func(struct i2c_adapter *adap)
 
 static const struct i2c_algorithm rk3x_i2c_algorithm = {
 	.master_xfer		= rk3x_i2c_xfer,
+	.master_xfer_atomic	= rk3x_i2c_xfer, /* ugly hack */
 	.functionality		= rk3x_i2c_func,
 };
 
