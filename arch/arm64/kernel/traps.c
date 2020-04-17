@@ -953,6 +953,13 @@ bool arm64_is_fatal_ras_serror(struct pt_regs *regs, unsigned long esr)
 
 void do_serror(struct pt_regs *regs, unsigned long esr)
 {
+	/* ignore SError to enable rk3399 PCIe bus enumeration */
+	if (esr >> ESR_ELx_EC_SHIFT == ESR_ELx_EC_SERROR) {
+		pr_debug("ignoring SError Interrupt on CPU%d\n",
+				smp_processor_id());
+		return;
+	}
+
 	/* non-RAS errors are not containable */
 	if (!arm64_is_ras_serror(esr) || arm64_is_fatal_ras_serror(regs, esr))
 		arm64_serror_panic(regs, esr);
