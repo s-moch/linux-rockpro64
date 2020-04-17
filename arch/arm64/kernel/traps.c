@@ -906,8 +906,16 @@ bool arm64_is_fatal_ras_serror(struct pt_regs *regs, unsigned int esr)
 
 asmlinkage void do_serror(struct pt_regs *regs, unsigned int esr)
 {
-	const bool was_in_nmi = in_nmi();
+	bool was_in_nmi;
 
+	/* ignore SError to enable rk3399 PCIe bus enumeration */
+	if (esr >> ESR_ELx_EC_SHIFT == ESR_ELx_EC_SERROR) {
+		pr_debug("ignoring SError Interrupt on CPU%d\n",
+				smp_processor_id());
+		return;
+	}
+
+	was_in_nmi = in_nmi();
 	if (!was_in_nmi)
 		nmi_enter();
 
