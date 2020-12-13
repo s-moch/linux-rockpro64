@@ -318,11 +318,13 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
 	status |= PCI_EXP_LNKCTL_RCB;
 	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
 
+	msleep(100);
+	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
+	msleep(120);
+
 	/* Enable Gen1 training */
 	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
 			    PCIE_CLIENT_CONFIG);
-
-	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
 
 	/* 500ms timeout value should be enough for Gen1/2 training */
 	err = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
