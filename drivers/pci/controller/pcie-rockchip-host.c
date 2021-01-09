@@ -320,7 +320,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
 
 	msleep(100);
 	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
-	msleep(120);
+	msleep(500);
 
 	/* Enable Gen1 training */
 	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
